@@ -7,16 +7,16 @@ This is a Java wrapper for Google's [Geocoding Web API](https://developers.googl
 > Root build.gradle
 ```gradle
 allprojects {
-  repositories {
-    maven { url 'https://jitpack.io' }
-  }
+	repositories {
+		maven { url 'https://jitpack.io' }
+	}
 }
 ```
 
 > Module build.gradle
 ```gradle
 dependencies {
-  compile 'com.github.arbitur:Geocoding-Android:1.0.1'
+	compile 'com.github.arbitur:Geocoding-Android:1.0'
 }
 ```
 
