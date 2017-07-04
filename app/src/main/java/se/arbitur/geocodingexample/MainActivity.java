@@ -43,19 +43,7 @@ public class MainActivity extends AppCompatActivity {
 		new Geocoding(query, getString(R.string.geocoding_key))
 				.setLanguage("sv")
 				.addComponent(AddressTypes.ADMINISTRATIVE_AREA_LEVEL_1, "Stockholm")
-				.fetch(new Callback() {
-					@Override
-					public void onResponse(Response response) {
-						for (Result result : response.getResults())
-							Log.d(TAG, "Address: " + result.getFormattedAddress());
-					}
-
-					@Override
-					public void onFailed(Response response, IOException exception) {
-						if (response != null) Log.e(TAG, response.getErrorMessage() == null ? response.getStatus() : response.getErrorMessage());
-						else Log.e(TAG, exception.getLocalizedMessage());
-					}
-				});
+				.fetch(geoCallback);
 	}
 
 
@@ -65,37 +53,41 @@ public class MainActivity extends AppCompatActivity {
 				.setLocationTypes(LocationTypes.ROOFTOP)
 				.setResultTypes(AddressTypes.STREET_ADDRESS)
 				.isSensor(true)
-				.fetch(new Callback() {
-					@Override
-					public void onResponse(Response response) {
-						for (Result result : response.getResults())
-							Log.d(TAG, "Coordinate: " + result.getFormattedAddress());
-					}
-
-					@Override
-					public void onFailed(Response response, IOException exception) {
-						if (response != null) Log.e(TAG, response.getErrorMessage() == null ? response.getStatus() : response.getErrorMessage());
-						else Log.e(TAG, exception.getLocalizedMessage());
-					}
-				});
+				.fetch(geoCallback);
 	}
 
 
 	private void placeIdSearch(String placeId) {
 		new ReverseGeocoding(placeId, getString(R.string.geocoding_key))
 				.setLanguage("sv")
-				.fetch(new Callback() {
-					@Override
-					public void onResponse(Response response) {
-						for (Result result : response.getResults())
-							Log.d(TAG, "PlaceID: " + result.getFormattedAddress());
-					}
-
-					@Override
-					public void onFailed(Response response, IOException exception) {
-						if (response != null) Log.e(TAG, response.getErrorMessage() == null ? response.getStatus() : response.getErrorMessage());
-						else Log.e(TAG, exception.getLocalizedMessage());
-					}
-				});
+				.fetch(geoCallback);
 	}
+
+
+
+	Callback geoCallback = new Callback() {
+		@Override
+		public void onResponse(Response response) {
+			Log.d(TAG, "Status code: " + response.getStatus());
+			Log.d(TAG, "Responses: " + response.getResults().length);
+
+			for (Result result : response.getResults()) {
+				Log.d(TAG, "   Formatted address: " + result.getFormattedAddress());
+				Log.d(TAG, "   Place ID: " + result.getPlaceId());
+				Log.d(TAG, "   Location: " + result.getGeometry().getLocation());
+				Log.d(TAG, "       Location type: " + result.getGeometry().getLocationType());
+				Log.d(TAG, "       SouthWest: " + result.getGeometry().getViewport().getSouthWest());
+				Log.d(TAG, "       NorthEast: " + result.getGeometry().getViewport().getNorthEast());
+				Log.d(TAG, "   Types:");
+				for (int i = 0; i < result.getAddressTypes().length; i++)
+					Log.d(TAG, "       " + result.getAddressTypes()[i]);
+			}
+		}
+
+		@Override
+		public void onFailed(Response response, IOException exception) {
+			if (response != null) Log.e(TAG, (response.getErrorMessage() == null) ? response.getStatus() : response.getErrorMessage());
+			else Log.e(TAG, exception.getLocalizedMessage());
+		}
+	};
 }

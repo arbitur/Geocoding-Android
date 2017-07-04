@@ -1,13 +1,10 @@
 package se.arbitur.geocoding.Models;
 
 
-import com.google.gson.annotations.SerializedName;
-
-
 
 public final class Coordinate {
-	@SerializedName("lat") Double latitude;
-	@SerializedName("lng") Double longitude;
+	Double latitude;
+	Double longitude;
 
 
 

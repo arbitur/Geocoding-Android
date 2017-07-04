@@ -1,7 +1,9 @@
 package se.arbitur.geocoding;
 
 
-import com.google.gson.annotations.SerializedName;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,11 +13,30 @@ import se.arbitur.geocoding.Models.Coordinate;
 
 
 public final class Result {
-	@SerializedName("address_components") AddressComponent[] addressComponents;
-	@SerializedName("formatted_address") String formattedAddress;
-	@SerializedName("geometry") Geometry geometry;
-	@SerializedName("types") String[] addressTypes;
-	@SerializedName("place_id") String placeId;
+	AddressComponent[] addressComponents;
+	String formattedAddress;
+	Geometry geometry;
+	String[] addressTypes;
+	String placeId;
+
+
+
+	protected Result(JSONObject json) throws JSONException {
+		JSONArray jsonAddressComponents = json.getJSONArray("address_components");
+		addressComponents = new AddressComponent[jsonAddressComponents.length()];
+		for (int i = 0; i < jsonAddressComponents.length(); i++)
+			addressComponents[i] = new AddressComponent(jsonAddressComponents.getJSONObject(i));
+
+		formattedAddress = json.getString("formatted_address");
+		geometry = new Geometry(json.getJSONObject("geometry"));
+
+		JSONArray jsonAddressTypes = json.getJSONArray("types");
+		addressTypes = new String[jsonAddressTypes.length()];
+		for (int i = 0; i < jsonAddressTypes.length(); i++)
+			addressTypes[i] = jsonAddressTypes.getString(i);
+
+		placeId = json.getString("place_id");
+	}
 
 
 	public Geometry getGeometry() {
@@ -58,9 +79,20 @@ public final class Result {
 
 
 	public static final class AddressComponent {
-		@SerializedName("long_name") String longName;
-		@SerializedName("short_name") String shortName;
-		@SerializedName("types") String[] addressTypes;
+		String longName;
+		String shortName;
+		String[] addressTypes;
+
+
+		protected AddressComponent(JSONObject json) throws JSONException {
+			longName = json.getString("long_name");
+			shortName = json.getString("short_name");
+
+			JSONArray jsonTypes = json.getJSONArray("types");
+			addressTypes = new String[jsonTypes.length()];
+			for (int i = 0; i < jsonTypes.length(); i++)
+				addressTypes[i] = jsonTypes.getString(i);
+		}
 
 
 		public String[] getAddressTypes() {
@@ -81,9 +113,18 @@ public final class Result {
 
 
 	public static final class Geometry {
-		@SerializedName("location") Coordinate location;
-		@SerializedName("location_type") String locationType;
-		@SerializedName("viewport") Viewport viewport;
+		Coordinate location;
+		String locationType;
+		Viewport viewport;
+
+
+		protected Geometry(JSONObject json) throws JSONException {
+			JSONObject jsonLocation = json.getJSONObject("location");
+			location = new Coordinate(jsonLocation.getDouble("lat"), jsonLocation.getDouble("lng"));
+
+			locationType = json.getString("location_type");
+			viewport = new Viewport(json.getJSONObject("viewport"));
+		}
 
 
 		public Coordinate getLocation() {
@@ -102,8 +143,17 @@ public final class Result {
 
 
 		public static final class Viewport {
-			@SerializedName("southwest") Coordinate southWest;
-			@SerializedName("northeast") Coordinate northEast;
+			Coordinate southWest;
+			Coordinate northEast;
+
+
+			protected Viewport(JSONObject json) throws JSONException {
+				JSONObject jsonSW = json.getJSONObject("southwest");
+				southWest = new Coordinate(jsonSW.getDouble("lat"), jsonSW.getDouble("lng"));
+
+				JSONObject jsonNE = json.getJSONObject("northeast");
+				northEast = new Coordinate(jsonNE.getDouble("lat"), jsonNE.getDouble("lng"));
+			}
 
 
 			public Coordinate getNorthEast() {

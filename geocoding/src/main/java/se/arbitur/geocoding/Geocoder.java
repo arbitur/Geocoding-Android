@@ -3,7 +3,8 @@ package se.arbitur.geocoding;
 import android.os.Handler;
 import android.os.Looper;
 
-import com.google.gson.Gson;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 
@@ -74,24 +75,30 @@ public abstract class Geocoder {
 
 			@Override
 			public void onResponse(Call call, okhttp3.Response response) throws IOException {
-				String rawBody = response.body().string();
-				final Response geoResponse = new Gson().fromJson(rawBody, Response.class);
+				String json = response.body().string();
 
-				if (geoResponse.getStatus().equals(ResponseStatuses.OK)) {
-					handler.post(new Runnable() {
-						@Override
-						public void run() {
-							callback.onResponse(geoResponse);
-						}
-					});
+				try {
+					final Response geoResponse = new Response(new JSONObject(json));
+
+					if (geoResponse.getStatus().equals(ResponseStatuses.OK)) {
+						handler.post(new Runnable() {
+							@Override
+							public void run() {
+								callback.onResponse(geoResponse);
+							}
+						});
+					}
+					else {
+						handler.post(new Runnable() {
+							@Override
+							public void run() {
+								callback.onFailed(geoResponse, null);
+							}
+						});
+					}
 				}
-				else {
-					handler.post(new Runnable() {
-						@Override
-						public void run() {
-							callback.onFailed(geoResponse, null);
-						}
-					});
+				catch (JSONException e) {
+					throw new IOException(e.getMessage());
 				}
 			}
 		});
