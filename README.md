@@ -1,7 +1,5 @@
 # Geocoding-Android
 
-[![](https://jitpack.io/v/arbitur/Geocoding-Android.svg)](https://jitpack.io/#arbitur/Geocoding-Android)
-
 This is a Java wrapper for Google's [Geocoding Web API](https://developers.google.com/maps/documentation/geocoding)
 
 ## Install
