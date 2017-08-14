@@ -89,7 +89,7 @@ new ReverseGeocoding(59.336, 18.079, apiKey)
 ...
 .fetch(new Callback() {
     @Override
-    public void onResponse(Response response) {
+    public void onSuccess(Response response) {
         for (Result result : response.getResults()) {
             Log.d(TAG, result.getFormattedAddress());
             
@@ -103,7 +103,7 @@ new ReverseGeocoding(59.336, 18.079, apiKey)
     }
         
     @Override
-    public void onFailed(Response response, IOException exception) {
+    public void onFailure(Response response, IOException exception) {
         Log.d(TAG, "Something went wrong");
     }
 })
