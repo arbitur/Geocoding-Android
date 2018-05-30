@@ -16,7 +16,7 @@ allprojects {
 > Module build.gradle
 ```gradle
 dependencies {
-	compile 'com.github.arbitur:Geocoding-Android:1.1'
+	implementation 'com.github.arbitur:Geocoding-Android:<version>'
 }
 ```
 
