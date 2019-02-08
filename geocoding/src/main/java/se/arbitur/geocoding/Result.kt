@@ -2,7 +2,7 @@ package se.arbitur.geocoding
 
 
 import org.json.JSONObject
-import se.arbitur.geocoding.Models.Coordinate
+import se.arbitur.geocoding.models.Coordinate
 
 
 

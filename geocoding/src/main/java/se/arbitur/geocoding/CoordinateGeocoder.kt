@@ -2,7 +2,7 @@ package se.arbitur.geocoding
 
 
 import okhttp3.HttpUrl
-import se.arbitur.geocoding.Models.Coordinate
+import se.arbitur.geocoding.models.Coordinate
 
 
 
@@ -47,7 +47,7 @@ class CoordinateGeocoder(val coordinate: Coordinate, key: String?): Geocoder(key
 
 	/**
 	 * Set result types.
-	 * Available types found in [AddressComponents][se.arbitur.geocoding.Constants.AddressComponents]
+	 * Available types found in [AddressComponents][se.arbitur.geocoding.constants.AddressComponents]
 	 * @param types The types
 	 */
 	fun setResultTypes(vararg types: String): CoordinateGeocoder {
@@ -57,7 +57,7 @@ class CoordinateGeocoder(val coordinate: Coordinate, key: String?): Geocoder(key
 
 	/**
 	 * Set location types.
-	 * Available types found in [LocationTypes][se.arbitur.geocoding.Constants.LocationTypes]
+	 * Available types found in [LocationTypes][se.arbitur.geocoding.constants.LocationTypes]
 	 * @param types The types
 	 */
 	fun setLocationTypes(vararg types: String): CoordinateGeocoder {

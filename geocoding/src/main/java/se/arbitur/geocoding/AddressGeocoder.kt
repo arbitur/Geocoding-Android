@@ -2,7 +2,7 @@ package se.arbitur.geocoding
 
 
 import okhttp3.HttpUrl
-import se.arbitur.geocoding.Models.Bounds
+import se.arbitur.geocoding.models.*
 import java.util.ArrayList
 
 
@@ -58,7 +58,7 @@ class AddressGeocoder(val query: String, key: String?): Geocoder(key) {
 
 	/**
 	 * Add a component.
-	 * Available types are [AddressTypes][se.arbitur.geocoding.Constants.AddressTypes].ROUTE, LOCALITY, ADMINISTRATIVE_AREA, POSTAL_CODE, COUNTRY
+	 * Available types are [AddressTypes][se.arbitur.geocoding.constants.AddressTypes].ROUTE, LOCALITY, ADMINISTRATIVE_AREA, POSTAL_CODE, COUNTRY
 	 * @param type The address type
 	 * @param value The value
 	 */

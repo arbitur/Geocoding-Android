@@ -10,7 +10,7 @@ import okhttp3.Request
 import okhttp3.Response
 import okhttp3.logging.HttpLoggingInterceptor
 import org.json.JSONObject
-import se.arbitur.geocoding.Constants.ResponseStatuses
+import se.arbitur.geocoding.constants.ResponseStatus
 import java.io.IOException
 import se.arbitur.geocoding.Response as GeoResponse
 
@@ -35,10 +35,9 @@ abstract class Geocoder(val key: String?) {
 
 	protected var language: String? = null
 
-	private val LOOPER = Handler(Looper.getMainLooper())
-
-
 	protected abstract val urlBuilder: HttpUrl.Builder
+
+    private val looper = Handler(Looper.getMainLooper())
 
 
 	fun fetch(callback: Callback) {
@@ -61,10 +60,10 @@ abstract class Geocoder(val key: String?) {
 					val json = response?.body()?.string() ?: throw NullPointerException()
 					val resp = GeoResponse(JSONObject(json))
 
-					if (resp.status == ResponseStatuses.OK)
-						LOOPER.post { callback.onSuccess(resp) }
+					if (resp.status == ResponseStatus.OK)
+                        looper.post { callback.onSuccess(resp) }
 					else
-						LOOPER.post { callback.onFailure(resp, null) }
+                        looper.post { callback.onFailure(resp, null) }
 				}
 				catch (ex: Exception) {
 					throw IOException(ex)
@@ -72,7 +71,7 @@ abstract class Geocoder(val key: String?) {
 			}
 
 			override fun onFailure(call: Call?, e: IOException?) {
-				LOOPER.post { callback.onFailure(null, e) }
+                looper.post { callback.onFailure(null, e) }
 			}
 		})
 	}
